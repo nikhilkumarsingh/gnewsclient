@@ -1,11 +1,15 @@
+# -*- coding: utf-8 -*-
 from setuptools import setup
 
 def readme():
-    with open('README.rst') as f:
-        return f.read()
+	try:
+	    with open('README.rst') as f:
+	        return f.read()
+	except:
+		pass
 
 setup(name = 'gnewsclient',
-      version = '1.0',
+      version = '1.0.2',
       classifiers = [
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
