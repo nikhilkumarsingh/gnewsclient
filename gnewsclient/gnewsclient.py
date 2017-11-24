@@ -45,6 +45,16 @@ class gnewsclient:
             'query': self.query
         }
         return config
+
+    def get_reset(self):
+        '''
+        function to reset the parameters
+        '''
+        self.edition = 'United States (English)'
+        self.language = 'english'
+        self.location = None
+        self.query = None
+        self.topic = 'top stories'
             
             
     def get_news(self):
