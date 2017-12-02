@@ -46,7 +46,7 @@ class gnewsclient:
         }
         return config
 
-    def get_reset(self):
+    def reset(self):
         '''
         function to reset the parameters
         '''
