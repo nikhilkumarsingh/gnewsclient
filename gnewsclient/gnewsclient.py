@@ -2,7 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
-
+from newspaper import Article
 
 class gnewsclient:
     
@@ -67,7 +67,11 @@ class gnewsclient:
             return
 
         soup = self.load_feed()
-        articles = self.scrape_feed(soup)
+        article_links = self.scrape_feed(soup)
+        articles = []
+        for link in article_links:
+            article = Article(link['link'])
+            articles.append(article)
         return articles
     
     
@@ -132,12 +136,12 @@ class gnewsclient:
 
         for entry in entries:
             article = {}
-            article['title'] = entry.title.text
+            #article['title'] = entry.title.text
             article['link'] = entry.link['href'].split('&url=')[1]
-            try:
+            '''try:
                 article['img'] = "https:" + entry.content.text.split('src=\"')[1].split('\"')[0]
             except:
                 article['img'] = None
-                pass
+                pass'''
             articles.append(article)
         return articles       
