@@ -1,3 +1,4 @@
 bs4==0.0.1
 html5lib==0.999999999
+newspaper3k==0.2.5
 requests==2.18.4

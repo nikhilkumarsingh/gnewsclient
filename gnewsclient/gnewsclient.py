@@ -2,6 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
+from newspaper import Article
 
 
 class gnewsclient:
@@ -68,8 +69,31 @@ class gnewsclient:
 
         soup = self.load_feed()
         articles = self.scrape_feed(soup)
+        object_list = []
+        for a in articles:
+            #article = {}
+            a['object'] = Article(a['link'])
         return articles
-    
+
+    def get_fulltext(self, article_obj):
+        article_obj.download()
+        article_obj.parse()
+        return article_obj.text
+
+    def get_metadata(self,article_obj):
+        article_obj.download()
+        article_obj.parse()
+        metadata = {}
+        metadata['date'] = article_obj.publish_date
+        metadata['image'] = article_obj.top_image
+        metadata['authors'] = article_obj.authors
+        return metadata
+    def get_summary(self, article_obj):
+        article_obj.download()
+        article_obj.parse()
+        article_obj.nlp()
+        return article_obj.summary
+
     
     def set_params(self):
         '''
@@ -134,10 +158,5 @@ class gnewsclient:
             article = {}
             article['title'] = entry.title.text
             article['link'] = entry.link['href'].split('&url=')[1]
-            try:
-                article['img'] = "https:" + entry.content.text.split('src=\"')[1].split('\"')[0]
-            except:
-                article['img'] = None
-                pass
             articles.append(article)
         return articles       
