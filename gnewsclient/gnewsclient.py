@@ -2,7 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
-
+from .userexception import NotFound
 
 class gnewsclient:
     
@@ -105,9 +105,9 @@ class gnewsclient:
             
         # setting location
         if self.location != None:
-            self.params['geo'] = self.location
-            # topic overrides location parameter. So, overriding it.
-            self.params['topic'] = None
+                self.params['geo'] = self.location
+                # topic overrides location parameter. So, overriding it.
+                self.params['topic'] = None
 
         # params setting successful
         return True
@@ -140,4 +140,10 @@ class gnewsclient:
                 article['img'] = None
                 pass
             articles.append(article)
+        try:
+            if len(articles)==0:
+                raise NotFound
+        except NotFound:
+             print("The articles for the given response are not found")
+             return
         return articles       
