@@ -31,6 +31,11 @@ setup(name = 'gnewsclient',
       author_email = 'nikhilksingh97@gmail.com',
       license = 'MIT',
       packages = ['gnewsclient'],
-      install_requires = ['requests', 'bs4', 'html5lib'], 
+      install_requires = ['requests', 'bs4', 'html5lib', 'Click'], 
       include_package_data = True,
-      zip_safe = False)
+      zip_safe = False,
+      entry_points='''
+        [console_scripts]
+        gnews=gnewsclient.scripts.gnews:cli
+      ''',
+      )
