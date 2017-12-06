@@ -71,28 +71,11 @@ class gnewsclient:
         articles = self.scrape_feed(soup)
         object_list = []
         for a in articles:
-            #article = {}
-            a['object'] = Article(a['link'])
-        return articles
+            article = Articledata(a['link'], title=a['title'])
+            object_list.append(article)
+        return object_list
 
-    def get_fulltext(self, article_obj):
-        article_obj.download()
-        article_obj.parse()
-        return article_obj.text
 
-    def get_metadata(self,article_obj):
-        article_obj.download()
-        article_obj.parse()
-        metadata = {}
-        metadata['date'] = article_obj.publish_date
-        metadata['image'] = article_obj.top_image
-        metadata['authors'] = article_obj.authors
-        return metadata
-    def get_summary(self, article_obj):
-        article_obj.download()
-        article_obj.parse()
-        article_obj.nlp()
-        return article_obj.summary
 
     
     def set_params(self):
@@ -160,3 +143,19 @@ class gnewsclient:
             article['link'] = entry.link['href'].split('&url=')[1]
             articles.append(article)
         return articles       
+
+
+class Articledata(Article):
+
+    def get_fulltext(self):
+        self.build()
+        return self.text
+
+    def get_metadata(self):
+        self.build()
+        return self.meta_data
+    def get_summary(self):
+        self.nlp()
+        return self.summary
+
+
