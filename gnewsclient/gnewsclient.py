@@ -148,14 +148,17 @@ class gnewsclient:
 class Articledata(Article):
 
     def get_fulltext(self):
-        self.build()
+        if self.html=='':
+            self.build()
         return self.text
 
     def get_metadata(self):
-        self.build()
+        if self.html=='':
+            self.build()
         return self.meta_data
     def get_summary(self):
-        self.nlp()
+        if self.html=='':
+            self.build()
         return self.summary
 
 
