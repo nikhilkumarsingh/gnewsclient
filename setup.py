@@ -9,7 +9,7 @@ def readme():
 		pass
 
 setup(name = 'gnewsclient',
-      version = '1.0.2',
+      version = '1.1.0',
       classifiers = [
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',

@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/badge/PyPi-v1.0.2-f39f37.svg)](https://pypi.python.org/pypi/gnewsclient)
+[![PyPI](https://img.shields.io/badge/PyPi-v1.1.0-f39f37.svg)](https://pypi.python.org/pypi/gnewsclient)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/nikhilkumarsingh/gnewsclient/blob/master/LICENSE.txt)
 
 # gnewsclient
