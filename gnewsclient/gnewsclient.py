@@ -2,6 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
+from newspaper import Article
 from .userexception import NotFound
 
 class gnewsclient:
@@ -68,8 +69,14 @@ class gnewsclient:
 
         soup = self.load_feed()
         articles = self.scrape_feed(soup)
-        return articles
-    
+        object_list = []
+        for a in articles:
+            article = Articledata(a['link'], title=a['title'])
+            object_list.append(article)
+        return object_list
+
+
+
     
     def set_params(self):
         '''
@@ -134,11 +141,6 @@ class gnewsclient:
             article = {}
             article['title'] = entry.title.text
             article['link'] = entry.link['href'].split('&url=')[1]
-            try:
-                article['img'] = "https:" + entry.content.text.split('src=\"')[1].split('\"')[0]
-            except:
-                article['img'] = None
-                pass
             articles.append(article)
         try:
             if len(articles)==0:
@@ -147,3 +149,22 @@ class gnewsclient:
                 print("The articles for the given response are not found.")
                 return
         return articles       
+
+
+class Articledata(Article):
+
+    def get_fulltext(self):
+        if self.html=='':
+            self.build()
+        return self.text
+
+    def get_metadata(self):
+        if self.html=='':
+            self.build()
+        return self.meta_data
+    def get_summary(self):
+        if self.html=='':
+            self.build()
+        return self.summary
+
+
