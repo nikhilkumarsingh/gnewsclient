@@ -9,7 +9,7 @@ def readme():
 		pass
 
 setup(name = 'gnewsclient',
-      version = '1.0.2',
+      version = '1.1.0',
       classifiers = [
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
@@ -30,7 +30,12 @@ setup(name = 'gnewsclient',
       author = 'Nikhil Kumar Singh',
       author_email = 'nikhilksingh97@gmail.com',
       license = 'MIT',
-      packages = ['gnewsclient'],
-      install_requires = ['requests', 'bs4', 'html5lib'], 
+      packages = ['gnewsclient', 'gnewsclient.scripts'],
+      install_requires = ['requests', 'bs4', 'html5lib', 'Click'], 
       include_package_data = True,
-      zip_safe = False)
+      zip_safe = False,
+      entry_points='''
+        [console_scripts]
+        gnews=gnewsclient.scripts.gnews:cli
+      ''',
+      )

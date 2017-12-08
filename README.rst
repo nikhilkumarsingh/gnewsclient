@@ -17,6 +17,9 @@ To install gnewsclient, simply,
 
     $ pip install gnewsclient
 
+To install and use **gnewsclient CLI**, follow instructions here
+`CLI <CLI.md>`__
+
 Filters
 -------
 
@@ -152,7 +155,7 @@ Usage
        'estonian', 'indonesian', 'slovenian', 'italian', 'maltese', 'haitian creole', 'esperanto', 'ukrainian', 
        'afrikaans', 'filipino', 'gujarati', 'hebrew', 'telugu', 'greek', 'persian', 'romanian']
 
-.. |PyPI| image:: https://img.shields.io/badge/PyPi-v1.0.2-f39f37.svg
+.. |PyPI| image:: https://img.shields.io/badge/PyPi-v1.1.0-f39f37.svg
    :target: https://pypi.python.org/pypi/gnewsclient
 .. |license| image:: https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000
    :target: https://github.com/nikhilkumarsingh/gnewsclient/blob/master/LICENSE.txt

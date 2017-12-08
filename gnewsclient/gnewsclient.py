@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
 from newspaper import Article
-
+from .userexception import NotFound
 
 class gnewsclient:
     
@@ -42,7 +42,7 @@ class gnewsclient:
             'edition': self.edition,
             'topic': self.topic,
             'language': self.language,
-            'loaction': self.location,
+            'location': self.location,
             'query': self.query
         }
         return config
@@ -142,6 +142,12 @@ class gnewsclient:
             article['title'] = entry.title.text
             article['link'] = entry.link['href'].split('&url=')[1]
             articles.append(article)
+        try:
+            if len(articles)==0:
+                raise NotFound
+        except NotFound:
+                print("The articles for the given response are not found.")
+                return
         return articles       
 
 
