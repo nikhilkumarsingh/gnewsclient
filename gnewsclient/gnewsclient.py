@@ -41,7 +41,7 @@ class gnewsclient:
             'edition': self.edition,
             'topic': self.topic,
             'language': self.language,
-            'loaction': self.location,
+            'location': self.location,
             'query': self.query
         }
         return config

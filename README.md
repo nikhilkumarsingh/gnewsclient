@@ -14,6 +14,8 @@ To install gnewsclient, simply,
 $ pip install gnewsclient
 ```
 
+To install and use **gnewsclient CLI**, follow instructions here [CLI](CLI.md)
+
 ## Filters
 
 Google News feeds use 3 basic filters:
