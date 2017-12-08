@@ -105,9 +105,9 @@ class gnewsclient:
             
         # setting location
         if self.location != None:
-                self.params['geo'] = self.location
-                # topic overrides location parameter. So, overriding it.
-                self.params['topic'] = None
+            self.params['geo'] = self.location
+            # topic overrides location parameter. So, overriding it.
+            self.params['topic'] = None
 
         # params setting successful
         return True
@@ -144,6 +144,6 @@ class gnewsclient:
             if len(articles)==0:
                 raise NotFound
         except NotFound:
-             print("The articles for the given response are not found")
-             return
+                print("The articles for the given response are not found.")
+                return
         return articles       
