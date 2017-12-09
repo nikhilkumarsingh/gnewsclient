@@ -49,8 +49,11 @@ def cli(config,query,edition,topic,location,language,shlangs,shtopics,sheditions
 		for t in tps:
 			click.echo(t)
 	else:
-		neews = client.get_news()
-		for n in neews:
-			content = "{}\n{}".format(n['title'],n['link'])
-			click.echo(content)
-			click.echo("\n")
+                try:
+                        neews=client.get_news()
+                        for n in neews:
+                                content = "{}\n{}".format(n['title'],n['link'])
+                                click.echo(content)
+                                click.echo("\n")
+                except TypeError:
+                        pass
