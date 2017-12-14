@@ -2,6 +2,33 @@ from tkinter import *
 from gnewsclient import gnewsclient
 from gnewsclient import utils
 from tkinter import ttk
+from PIL import Image
+import urllib.request
+import webbrowser
+
+
+
+class resizingCanvas(Canvas):
+    def on_resize(self,event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width)/self.width
+        hscale = float(event.height)/self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all",0,0,wscale,hscale)
+        self.configure(scrollregion=self.bbox('all'))
+
+    # def canvas_configure(self, event):
+    def __init__(self,parent,**kwargs):
+        Canvas.__init__(self,parent,**kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
+
 
 
 # function to set attributes(language, location, topic), and then fetch news accordingly
@@ -25,9 +52,6 @@ def news():
         client.location = None
 
     update_status(client,status)
-    for i in client.get_news():
-        print(i)
-        print("\n")
     return
 
 
@@ -36,7 +60,7 @@ def search():
     global search_query,client,status
     client.query= search_query.get()
     update_status(client,status)
-    print(client.get_news())
+    # print(client.get_news())
     return
 
 # helper function for status bar
@@ -73,7 +97,7 @@ query = Entry(search_frame, textvariable=search_query).grid(row=1, column=0)
 search_button = Button(search_frame,text= "search", command=search).grid(row=1, column = 1)
 
 west_frame = Frame(root)
-west_frame.pack(side=LEFT)
+west_frame.pack(side=LEFT, padx=10)
 
 
 # frame for topic, location, and edition filters
@@ -107,11 +131,11 @@ location_query = StringVar()
 location = Entry(tle_frame, textvariable=location_query).grid(row=4, column=1,pady=50)
 
 
-
 # button to fetch news
 getnews = Button(tle_frame, command=news,text = "Get News!").grid(row=6,column=0,columnspan=2, pady=25)
 
 
 
-
 root.mainloop()
+
+
