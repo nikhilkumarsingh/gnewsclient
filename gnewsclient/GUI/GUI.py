@@ -32,6 +32,59 @@ class resizingCanvas(Canvas):
 
 
 
+# function to load news in the east frame(level 1)
+# see line numbers 189-234 for detailed explanation
+def show_news():
+    global east_frame, myscrollbar, frame,canvas, photo
+    east_frame.destroy() # destroy old news' frame
+    east_frame = Frame(root, relief=GROOVE, bd=1) # new frame for fresh news
+    east_frame.pack(side=RIGHT)
+
+    canvas = resizingCanvas(east_frame)
+
+    frame = Frame(canvas)
+    myscrollbar = Scrollbar(east_frame, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=myscrollbar.set)
+    myscrollbar.pack(side="right", fill="y")
+
+    canvas.pack(side="left", padx=30, pady=30)
+    canvas.create_window((0, 0), window=frame, anchor='nw')
+
+    nws = client.get_news()
+
+    l = len(nws)
+    photo = {}
+    for i in range(l):
+        try:
+            imzlnk = nws[i]['img']
+            imz = Image.open(urllib.request.urlopen(imzlnk))
+            imz.save('file' + str(i) + '.gif')
+            f = Frame(frame)
+            lnk = nws[i]['link']
+            ttle = nws[i]['title']
+            photo[i] = PhotoImage(file='file' + str(i) + '.gif')
+            photolabel = Label(f, image=photo[i]).grid(row=0, column=0, rowspan=2, sticky=W, pady=10)
+            ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W, pady=10)
+            read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
+            read_more.grid(row=1, column=1, sticky=W)
+            read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
+            f.grid(column=1, row=i, sticky=W)
+        except AttributeError:
+            imzlnk = nws[i]['img']
+            f = Frame(frame)
+            lnk = nws[i]['link']
+            ttle = nws[i]['title']
+            ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W)
+            read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
+            read_more.grid(row=1, column=1, sticky=W)
+            read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
+            f.pack()
+    return
+
+
+
+
+
 # function to set attributes(language, location, topic), and then fetch news accordingly
 # we have variables topic_query, language_query, location_query for storing attributes
 def news():
@@ -53,6 +106,7 @@ def news():
         client.location = None
 
     update_status(client,status)
+    show_news()
     return
 
 
@@ -62,6 +116,7 @@ def search():
     client.query= search_query.get()
     update_status(client,status)
     # print(client.get_news())
+    show_news()
     return
 
 # helper function for status bar
