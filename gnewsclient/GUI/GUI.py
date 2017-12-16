@@ -63,8 +63,8 @@ def show_news():
             lnk = nws[i]['link']
             ttle = nws[i]['title']
             photo[i] = PhotoImage(file='file' + str(i) + '.gif')
-            photolabel = Label(f, image=photo[i]).grid(row=0, column=0, rowspan=2, sticky=W, pady=10)
-            ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W, pady=10)
+            photolabel = Label(f, image=photo[i]).grid(row=0, column=0, rowspan=3, sticky=W, pady=10)
+            ttlelabel = Label(f, text=str(ttle), font=("Helvetica", 12)).grid(row=0, column=1, sticky=W, pady=10)
             read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
             read_more.grid(row=1, column=1, sticky=W)
             read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
@@ -74,7 +74,7 @@ def show_news():
             f = Frame(frame)
             lnk = nws[i]['link']
             ttle = nws[i]['title']
-            ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W)
+            ttlelabel = Label(f, text=str(ttle), font=("Helvetica", 12)).grid(row=0, column=1, sticky=W)
             read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
             read_more.grid(row=1, column=1, sticky=W)
             read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
@@ -216,19 +216,19 @@ for i in range(l):
         lnk = nws[i]['link']
         ttle = nws[i]['title']
         photo[i] = PhotoImage(file='file'+str(i)+'.gif')
-        photolabel = Label(f, image = photo[i]).grid(row=0, column=0, rowspan=2, sticky=W, pady=10)
-        ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W, pady=10)
+        photolabel = Label(f, image = photo[i]).grid(row=0, column=0, rowspan=3, sticky=W, pady=10)
+        ttlelabel = Label(f, text=str(ttle), font=("Helvetica", 12)).grid(row=0, column=1, sticky=W, pady=10, padx=5)
+        # ttlelabel.config()
         read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
-        read_more.grid(row=1, column=1, sticky=W)
+        read_more.grid(row=1, column=1, sticky=W, padx=5)
         read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
         f.grid(column=1, row=i, sticky=W)
-
     except AttributeError:# incase there is no photo found, no photo rendering done here
         imzlnk = nws[i]['img']
         f = Frame(frame)
         lnk = nws[i]['link']
         ttle = nws[i]['title']
-        ttlelabel = Label(f, text=str(ttle)).grid(row=0, column=1, sticky=W)
+        ttlelabel = Label(f, text=str(ttle), font=("Helvetica", 12)).grid(row=0, column=1, sticky=W)
         read_more = Label(f, text="Read more about this", fg="blue", cursor="hand2")
         read_more.grid(row=1, column=1, sticky=W)
         read_more.bind("<Button-1>", lambda event, link=str(lnk): gotolink(event, link))
@@ -236,5 +236,6 @@ for i in range(l):
 
 # button to fetch news
 getnews = Button(tle_frame, command=news,text = "Get News!").grid(row=6,column=0,columnspan=2, pady=25)
-
+img = PhotoImage(file='logo.png')
+root.tk.call('wm', 'iconphoto', root._w, img)
 root.mainloop()
