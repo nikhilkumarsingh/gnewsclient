@@ -45,6 +45,13 @@ Other than these, you can also specify:
     Provide results according to a specific query.
 
 ## Usage
+### Simply run the GUI version:
+```
+$ gnews-gui
+```
+
+### Or use the CLI version:
+
 
 - Create a gnewsclient object:
 ```python
