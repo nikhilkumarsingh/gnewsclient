@@ -51,7 +51,25 @@ $ gnews-gui
 ```
 
 ### Or use the CLI version:
+`$ gnews [OPTIONS]`
 
+```
+Options:
+  --config         shows default config
+  --query TEXT     shows news about query given
+  --edition TEXT   shows news of edition given, default=United States
+                   (English)
+  --topic TEXT     shows topic given, default=top stories
+  --location TEXT  shows news from location given
+  --language TEXT  shows news in language given, default is english
+  --sheditions     shows list of available editions
+  --shtopics       shows list of available topics
+  --shlangs        shows list of available languages
+  --help           Show this message and exit.
+
+ ```
+
+### Usage in Python scripts:
 
 - Create a gnewsclient object:
 ```python
