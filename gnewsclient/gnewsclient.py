@@ -4,11 +4,12 @@ from bs4 import BeautifulSoup
 from .utils import editionMap, topicMap, langMap
 from .userexception import NotFound
 
+
 class gnewsclient:
-    
-    def __init__(self, edition = 'United States (English)',
-                 topic = 'top stories', location = None,
-                 query = None, language = 'english'):
+
+    def __init__(self, edition='United States (English)',
+                 topic='top stories', location=None,
+                 query=None, language='english'):
         '''
         constructor function
         '''
@@ -16,14 +17,14 @@ class gnewsclient:
         self.editions = list(editionMap)
         self.topics = list(topicMap)
         self.languages = list(langMap)
-        
+
         # default parameter values
         self.edition = edition
         self.topic = topic
         self.location = location
         self.query = query
         self.language = language
-        
+
         # parameters to be passed in HTTP request
         self.params = {'output': 'atom',
                        'ned': self.edition,
@@ -31,8 +32,7 @@ class gnewsclient:
                        'geo': self.location,
                        'q': self.query,
                        'hl': self.language}
-            
-    
+
     def get_config(self):
         '''
         function to get current configuration
@@ -55,74 +55,73 @@ class gnewsclient:
         self.location = None
         self.query = None
         self.topic = 'top stories'
-            
-            
+
     def get_news(self):
         '''
         function to fetch news articles
         '''
         status = self.set_params()
         # params not set properly
-        if status == False:
+        if status is False:
             return
 
         soup = self.load_feed()
         articles = self.scrape_feed(soup)
         return articles
-    
-    
+
     def set_params(self):
         '''
         function to set params for HTTP request
         '''
-        
+
         # setting edition
         try:
             self.params['ned'] = editionMap[self.edition]
         except KeyError:
-            print("{} edition not found.\nUse editions attribute to get list of editions.".format(self.edition))
+            print(f"{self.edition} edition not found.\n"
+                  f"Use editions attribute to get list of editions.")
             return False
-            
+
         # setting topic
         try:
             self.params['topic'] = topicMap[self.topic]
         except KeyError:
-            print("{} topic not found.\nUse topics attribute to get list of topics.".format(self.topic))
+            print(f"{self.topic} topic not found.\n"
+                  f"Use topics attribute to get list of topics.")
             return False
-        
+
         # setting language
         try:
             self.params['hl'] = langMap[self.language]
         except KeyError:
-            print("{} language not found.\nUse langugaes attribute to get list of languages.".format(self.language))
+            print(f"{self.language} language not found.\n"
+                  f"Use langugaes attribute to get list of languages.")
             return False
-            
+
         # setting query
-        if self.query != None:
+        if self.query is not None:
             self.params['q'] = self.query
             # topic overrides query parameter. So, clearing it.
             self.params['topic'] = None
-            
+
         # setting location
-        if self.location != None:
+        if self.location is not None:
             self.params['geo'] = self.location
             # topic overrides location parameter. So, overriding it.
             self.params['topic'] = None
 
         # params setting successful
         return True
-        
-    
+
     def load_feed(self):
         '''
         function to load atom feed
         '''
         url = "https://news.google.com/news"
-        resp = requests.get(url, params = self.params)
+        resp = requests.get(url, params=self.params)
         soup = BeautifulSoup(resp.content, 'html5lib')
         return soup
-    
-    
+
     def scrape_feed(self, soup):
         '''
         function to scrape atom feed
@@ -134,16 +133,19 @@ class gnewsclient:
             article = {}
             article['title'] = entry.title.text
             article['link'] = entry.link['href'].split('&url=')[1]
+            article['releasedAt'] = entry.updated.text
+
             try:
-                article['img'] = "https:" + entry.content.text.split('src=\"')[1].split('\"')[0]
-            except:
+                string = entry.content.text.split('src=\"')[1].split('\"')[0]
+                article['img'] = "https:" + string
+            except Exception:
                 article['img'] = None
                 pass
             articles.append(article)
         try:
-            if len(articles)==0:
+            if len(articles) == 0:
                 raise NotFound
         except NotFound:
                 print("The articles for the given response are not found.")
                 return
-        return articles       
+        return articles
