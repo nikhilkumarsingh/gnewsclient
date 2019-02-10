@@ -132,7 +132,7 @@ class gnewsclient:
         for entry in entries:
             article = {}
             article['title'] = entry.title.text
-            article['link'] = entry.link['href'].split('&url=')[1]
+            article['link'] = entry.link['href']
             article['releasedAt'] = entry.updated.text
 
             try:
