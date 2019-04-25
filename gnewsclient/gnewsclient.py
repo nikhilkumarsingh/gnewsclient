@@ -1,133 +1,81 @@
-import json
+import feedparser
 import requests
-from bs4 import BeautifulSoup
-from .utils import editionMap, topicMap, langMap
+from fuzzywuzzy import process
+
+from .utils import locationMap, langMap, topicMap, top_news_url, topic_url
 
 
-class gnewsclient:
-    
-    def __init__(self, edition = 'United States (English)',
-                 topic = 'top stories', location = None,
-                 query = None, language = 'english'):
-        '''
-        constructor function
-        '''
-        # list of editions and topics
-        self.editions = list(editionMap)
-        self.topics = list(topicMap)
+class NewsClient:
+
+    def __init__(self, location='United States', language='english', topic='Top Stories'):
+        """
+        client initialization
+        """
+        # list of available locations, languages and topics
+        self.locations = list(locationMap)
         self.languages = list(langMap)
-        
-        # default parameter values
-        self.edition = edition
-        self.topic = topic
+        self.topics = list(topicMap)
+
+        # setting initial configuration
         self.location = location
-        self.query = query
         self.language = language
-        
-        # parameters to be passed in HTTP request
-        self.params = {'output': 'atom',
-                       'ned': self.edition,
-                       'topic': self.topic,
-                       'geo': self.location,
-                       'q': self.query,
-                       'hl': self.language}
-            
-    
+        self.topic = topic
+
     def get_config(self):
-        '''
+        """
         function to get current configuration
-        '''
+        """
         config = {
-            'edition': self.edition,
-            'topic': self.topic,
+            'location': self.location,
             'language': self.language,
-            'loaction': self.location,
-            'query': self.query
+            'topic': self.topic,
         }
         return config
-            
-            
+
+    @property
+    def params_dict(self):
+        """
+        function to get params dict for HTTP request
+        """
+        location_code = 'US'
+        language_code = 'en'
+        if len(self.location):
+            location_code = locationMap[process.extractOne(self.location, self.locations)[0]]
+        if len(self.language):
+            language_code = langMap[process.extractOne(self.language, self.languages)[0]]
+        params = {
+            'hl': language_code,
+            'gl': location_code,
+            'ceid': '{}:{}'.format(location_code, language_code)
+        }
+        return params
+
     def get_news(self):
-        '''
-        function to fetch news articles
-        '''
-        status = self.set_params()
-        # params not set properly
-        if status == False:
-            return
+        """
+        function to get news articles
+        """
+        if self.topic is None or self.topic is 'Top Stories':
+            resp = requests.get(top_news_url, params=self.params_dict)
+        else:
+            topic_code = topicMap[process.extractOne(self.topic, self.topics)[0]]
+            resp = requests.get(topic_url.format(topic_code), params=self.params_dict)
+        return self.parse_feed(resp.content)
 
-        soup = self.load_feed()
-        articles = self.scrape_feed(soup)
-        return articles
-    
-    
-    def set_params(self):
-        '''
-        function to set params for HTTP request
-        '''
-        
-        # setting edition
-        try:
-            self.params['ned'] = editionMap[self.edition]
-        except KeyError:
-            print("{} edition not found.\nUse editions attribute to get list of editions.".format(self.edition))
-            return False
-            
-        # setting topic
-        try:
-            self.params['topic'] = topicMap[self.topic]
-        except KeyError:
-            print("{} topic not found.\nUse topics attribute to get list of topics.".format(self.topic))
-            return False
-        
-        # setting language
-        try:
-            self.params['hl'] = langMap[self.language]
-        except KeyError:
-            print("{} language not found.\nUse langugaes attribute to get list of languages.".format(self.language))
-            return False
-            
-        # setting query
-        if self.query != None:
-            self.params['q'] = self.query
-            # topic overrides query parameter. So, clearing it.
-            self.params['topic'] = None
-            
-        # setting location
-        if self.location != None:
-            self.params['geo'] = self.location
-            # topic overrides location parameter. So, overriding it.
-            self.params['topic'] = None
-
-        # params setting successful
-        return True
-        
-    
-    def load_feed(self):
-        '''
-        function to load atom feed
-        '''
-        url = "https://news.google.com/news"
-        resp = requests.get(url, params = self.params)
-        soup = BeautifulSoup(resp.content, 'html5lib')
-        return soup
-    
-    
-    def scrape_feed(self, soup):
-        '''
-        function to scrape atom feed
-        '''
-        entries = soup.findAll('entry')
+    @staticmethod
+    def parse_feed(content):
+        """
+        utility function to parse feed
+        """
+        feed = feedparser.parse(content)
         articles = []
-
-        for entry in entries:
-            article = {}
-            article['title'] = entry.title.text
-            article['link'] = entry.link['href'].split('&url=')[1]
+        for entry in feed['entries']:
+            article = {
+                'title': entry['title'],
+                'link': entry['link']
+            }
             try:
-                article['img'] = "https:" + entry.content.text.split('src=\"')[1].split('\"')[0]
-            except:
-                article['img'] = None
-                pass
+                article['media'] = entry['media_content'][0]['url']
+            except KeyError:
+                article['media'] = None
             articles.append(article)
-        return articles       
+        return articles

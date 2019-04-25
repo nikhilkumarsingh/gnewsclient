@@ -1,1 +1,0 @@
-from .gnewsclient import gnewsclient
