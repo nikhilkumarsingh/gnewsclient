@@ -1,4 +1,5 @@
 from html.parser import HTMLParser
+from typing import Dict
 
 import requests
 

@@ -2,12 +2,14 @@ import feedparser
 import requests
 from fuzzywuzzy import process
 
+from gnewsclient.PyOpenGraph import PyOpenGraph
 from .utils import locationMap, langMap, topicMap, top_news_url, topic_url
 
 
 class NewsClient:
 
-    def __init__(self, location='United States', language='english', topic='Top Stories'):
+    def __init__(self, location='United States', language='english', topic='Top Stories',
+                 use_opengraph=False, max_results=10):
         """
         client initialization
         """
@@ -20,6 +22,10 @@ class NewsClient:
         self.location = location
         self.language = language
         self.topic = topic
+
+        # other settings
+        self.use_opengraph = use_opengraph
+        self.max_results = max_results
 
     def get_config(self):
         """
@@ -61,14 +67,13 @@ class NewsClient:
             resp = requests.get(topic_url.format(topic_code), params=self.params_dict)
         return self.parse_feed(resp.content)
 
-    @staticmethod
-    def parse_feed(content):
+    def parse_feed(self, content):
         """
         utility function to parse feed
         """
         feed = feedparser.parse(content)
         articles = []
-        for entry in feed['entries']:
+        for entry in feed['entries'][:self.max_results]:
             article = {
                 'title': entry['title'],
                 'link': entry['link']
@@ -77,5 +82,7 @@ class NewsClient:
                 article['media'] = entry['media_content'][0]['url']
             except KeyError:
                 article['media'] = None
+            if self.use_opengraph:
+                article = {**PyOpenGraph(article['link']).properties, **article}
             articles.append(article)
         return articles
