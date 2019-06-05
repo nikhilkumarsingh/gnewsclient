@@ -8,7 +8,7 @@ def readme():
 
 
 setup(name='gnewsclient',
-      version='1.11',
+      version='1.12',
       classifiers=[
           "License :: OSI Approved :: MIT License",
           "Programming Language :: Python :: 3",

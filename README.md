@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/badge/PyPi-v1.1-f39f37.svg)](https://pypi.python.org/pypi/gnewsclient)
+[![PyPI](https://img.shields.io/badge/PyPi-v1.12-f39f37.svg)](https://pypi.python.org/pypi/gnewsclient)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/nikhilkumarsingh/gnewsclient/blob/master/LICENSE.txt)
 
 # gnewsclient
@@ -17,7 +17,7 @@ $ pip install gnewsclient
 - Create a NewsClient object:
     ```python
     >>> from gnewsclient import gnewsclient
-    >>> client = gnewsclient.NewsClient(language='hindi', location='india', topic='Business')
+    >>> client = gnewsclient.NewsClient(language='hindi', location='india', topic='Business', max_results=3)
     ```
 
 - Get current parameter settings
@@ -41,6 +41,33 @@ $ pip install gnewsclient
      {'title': 'मारुति सुजुकी की बलेनो हुई स्मार्ट, जानें कीमत और खास फीचर्स - Hindustan',
       'link': 'https://www.livehindustan.com/business/story-maruti-suzuki-launched-new-smart-baleno-know-price-and-features-2500723.html',
       'media': 'https://lh6.googleusercontent.com/proxy/Jwm-p9YBF5bT3bcsXv5KGn_83nniRJsi9CArg1yU27LrKMu72cl1ekX4na_e9JfjhWHrRKD-LWLdUiK1H91VnB_gwVhoJNQX_AvhLaKUId-uodvOMDIe=-w150-h150-c'}]    
+    ```
+    
+- Get news feed with OpenGraph data
+    ```python
+    >>> client = gnewsclient.NewsClient(language='hindi', location='india', topic='Business', use_opengraph=True, max_results=5)
+    [{'url': 'https://aajtak.intoday.in/story/share-market-low-sensex-nifty-bse-nse-yesbank-ntpc-heromotoco-rupee-tut-1-1090122.html',
+      'site_name': 'aajtak.intoday.in',
+      'title': 'लाल निशान पर बंद हुआ शेयर बाजार, अब भी 40 हजार के पार - आज तक',
+      'description': 'सप्ताह के दूसरे कारोबारी दिन भारतीय शेयर बाजार ने एक मुकाम को हासिल किया. हालांकि कारोबार के अंत में सेंसेक्स और निफ्टी लाल निशान पर बंद हुए.',
+      'image': 'https://smedia2.intoday.in/aajtak/images/stories/062019/sensex_1559643004_618x347.jpeg',
+      'type': 'Article',
+      'image_width': 150,
+      'image_height': 150,
+      'link': 'https://aajtak.intoday.in/story/share-market-low-sensex-nifty-bse-nse-yesbank-ntpc-heromotoco-rupee-tut-1-1090122.html',
+      'media': None},
+     {'url': 'https://www.amarujala.com/photo-gallery/automobiles/bajaj-platina-110-h-gear-vs-tvs-victor-full-comparison-and-price',
+      'site_name': 'Amar Ujala',
+      'title': 'Bajaj Platina 110 Vs TVS Victor, जानिये कौन सी बाइक है वैल्यू फॉर मनी - अमर उजाला',
+      'description': 'बजाज ऑटो ने भारत में अपनी नई Platina 110 H-Gear को लांच कर दिया है। नई Platina 110 का सीधा मुकाबला TVS की Victor से होगा। चाइये जानते हैं इन दोनों',
+      'image': 'https://spiderimg.amarujala.com/assets/images/2019/06/05/750x506/bajaj-platina-110-vs-tvs-victor_1559719613.jpeg',
+      'locale': 'hi_IN',
+      'type': 'article',
+      'headline': 'Bajaj Platina 110 H-Gear 110 या TVS Victor, जानिये कौन सी बाइक है सबसे बेहतर',
+      'image_width': 150,
+      'image_height': 101.19999999999999,
+      'link': 'https://www.amarujala.com/photo-gallery/automobiles/bajaj-platina-110-h-gear-vs-tvs-victor-full-comparison-and-price',
+      'media': None}]
     ```
 
 - Changing parameters
