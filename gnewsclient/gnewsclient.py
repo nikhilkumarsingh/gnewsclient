@@ -1,8 +1,10 @@
+import argparse
+
 import feedparser
 import requests
 from fuzzywuzzy import process
 
-from gnewsclient.PyOpenGraph import PyOpenGraph
+from .PyOpenGraph import PyOpenGraph
 from .utils import locationMap, langMap, topicMap, top_news_url, topic_url
 
 
@@ -60,12 +62,18 @@ class NewsClient:
         """
         function to get news articles
         """
-        if self.topic is None or self.topic is 'Top Stories':
+        if self.topic is None or self.topic == 'Top Stories':
             resp = requests.get(top_news_url, params=self.params_dict)
         else:
             topic_code = topicMap[process.extractOne(self.topic, self.topics)[0]]
             resp = requests.get(topic_url.format(topic_code), params=self.params_dict)
         return self.parse_feed(resp.content)
+
+    def print_news(self):
+        articles = self.get_news()
+        for article in articles:
+            print(article['title'])
+            print(article['link'], end='\n\n')
 
     def parse_feed(self, content):
         """
@@ -86,3 +94,44 @@ class NewsClient:
                 article = {**PyOpenGraph(article['link']).properties, **article}
             articles.append(article)
         return articles
+
+
+def main():
+    parser = argparse.ArgumentParser(description="GoogleNews Client CLI!")
+
+    parser.add_argument("-loc", "--location", type=str, default='United States',
+                        help="Set news location.")
+
+    parser.add_argument("-lang", "--language", type=str, default='english',
+                        help="Set news language.")
+
+    parser.add_argument("-t", "--topic", type=str, default='Top Stories',
+                        help="Set news topic.")
+
+    parser.add_argument("-sloc", "--show-locations", action='store_true',
+                        help="Show location choices")
+
+    parser.add_argument("-slang", "--show-languages", action='store_true',
+                        help="Show language choices")
+
+    parser.add_argument("-st", "--show-topics", action='store_true',
+                        help="Show topic choices")
+
+    args = parser.parse_args()
+    args_dict = vars(args)
+
+    if args_dict['show_locations']:
+        print("\n".join(locationMap.keys()))
+
+    elif args_dict['show_languages']:
+        print("\n".join(langMap.keys()))
+
+    elif args_dict['show_topics']:
+        print("\n".join(topicMap.keys()))
+
+    client = NewsClient(location=args_dict['location'], language=args_dict['language'], topic=args_dict['topic'])
+    client.print_news()
+
+
+if __name__ == "__main__":
+    main()
