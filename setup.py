@@ -25,5 +25,10 @@ setup(name='gnewsclient',
       packages=['gnewsclient'],
       install_requires=['requests', 'fuzzywuzzy', 'feedparser'],
       include_package_data=True,
-      zip_safe=False
+      zip_safe=False,
+      entry_points={
+          'console_scripts': [
+              'gnewsclient = gnewsclient.gnewsclient:main'
+          ],
+      }
       )
