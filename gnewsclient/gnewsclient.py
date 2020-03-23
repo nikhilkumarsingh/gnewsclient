@@ -2,7 +2,7 @@ import argparse
 
 import feedparser
 import requests
-from fuzzywuzzy import process
+from rapidfuzz import process
 
 from .PyOpenGraph import PyOpenGraph
 from .utils import locationMap, langMap, topicMap, top_news_url, topic_url
