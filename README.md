@@ -23,7 +23,7 @@ $ pip install gnewsclient
 - Get current parameter settings
     ```python
     >>> client.get_config()
-    {'location': 'india', 'language': 'hindi', 'topic': 'Sorts'}
+    {'location': 'india', 'language': 'hindi', 'topic': 'Business'}
     ```
 
 - Get news feed
