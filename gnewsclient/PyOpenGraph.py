@@ -13,9 +13,12 @@ class PyOpenGraph(object):
             html = "<html></html>"
         p = PyOpenGraphParser()
         p.feed(html)
-
+        ratio = 0
         if p.properties['image'] and p.properties['image:height'] and p.properties['image:width']:
-            ratio = int(p.properties['image:height']) / int(p.properties['image:width'])
+            try:
+                ratio = int(p.properties['image:height']) / int(p.properties['image:width'])
+            except Exception:
+                pass
             p.properties['image_width'] = 150
             p.properties['image_height'] = 150 * ratio
         else:
